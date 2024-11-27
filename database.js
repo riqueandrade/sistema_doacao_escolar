@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const bcrypt = require('bcrypt');
+const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
 
 // Configuração do banco de dados
 const db = new sqlite3.Database(path.join(__dirname, 'doacoes.db'), async (err) => {
@@ -41,7 +42,7 @@ function criarTabelas(db) {
 // Função para criar usuário admin padrão
 function criarUsuarioAdmin(db) {
     const adminEmail = 'admin@escola.com';
-    bcrypt.hash('admin123', 10, (err, hash) => {
+    bcrypt.hash('admin123', SALT_ROUNDS, (err, hash) => {
         if (err) {
             console.error('Erro ao criar hash da senha:', err);
             return;

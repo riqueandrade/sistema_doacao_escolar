@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const db = require('../database');
 
-// Chave secreta para JWT - Em produção, usar variável de ambiente
-const JWT_SECRET = 'sua_chave_secreta_jwt';
+// Usar a chave secreta do .env
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION;
 
 /**
  * Funções auxiliares
@@ -11,7 +12,7 @@ const JWT_SECRET = 'sua_chave_secreta_jwt';
 // Função para gerar token JWT
 const generateToken = (payload) => {
     return jwt.sign(payload, JWT_SECRET, {
-        expiresIn: '1d' // Token expira em 1 dia
+        expiresIn: JWT_EXPIRATION
     });
 };
 
