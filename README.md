@@ -117,7 +117,10 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 📞 Suporte
 
-Em caso de dúvidas ou problemas, abra uma issue ou entre em contato através do email: suporte@escolafelipesantos.edu.br
+Em caso de dúvidas ou problemas, abra uma issue ou entre em contato:
+
+- WhatsApp: [+55 (47) 98823-1069](https://wa.me/5547988231069)
+- Email: [henriquereynaud7@gmail.com](mailto:henriquereynaud7@gmail.com)
 
 ## ✨ Próximas Atualizações
 
