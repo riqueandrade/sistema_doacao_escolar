@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Doação - Escola Felipe dos Santos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/cadastro.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Escola Felipe dos Santos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Fazer Doação</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">Área Administrativa</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>Cadastro de Doação</h2>
+            </div>
+            <div class="card-body">
+                <form id="formDoacao">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contato" class="form-label">Contato (telefone ou email)</label>
+                        <input type="text" class="form-control" id="contato" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_doacao" class="form-label">Tipo de Doação</label>
+                        <select class="form-select" id="tipo_doacao" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="material_escolar">Material Escolar</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="livros">Livros</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Preferência de Entrega</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="preferencia_entrega" id="entrega_escola" value="escola" required>
+                            <label class="form-check-label" for="entrega_escola">
+                                Entregar na escola
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="preferencia_entrega" id="coleta" value="coleta">
+                            <label class="form-check-label" for="coleta">
+                                Solicitar coleta
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar Doação</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cadastro.js"></script>
+</body>
+</html> 

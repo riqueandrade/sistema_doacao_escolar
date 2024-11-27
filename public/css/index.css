@@ -1,0 +1,145 @@
+body {
+    background-color: #f0f2f5;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7) !important;
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.jumbotron {
+    background: white;
+    border-radius: 15px;
+    padding: 3.5rem 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-top: 2rem;
+}
+
+.jumbotron h1 {
+    color: #1a1a1a;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.jumbotron .lead {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card h3 {
+    color: #1a1a1a;
+    font-size: 1.3rem;
+    margin: 1rem 0;
+}
+
+.feature-card p {
+    color: #666;
+    margin-bottom: 0;
+}
+
+.info-section {
+    background: white;
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.process-list {
+    list-style: none;
+    padding: 0;
+}
+
+.process-list li {
+    margin-bottom: 1rem;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.contact-info {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.contact-info h2 {
+    color: #1a1a1a;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-info p {
+    color: #444;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    padding: 1rem 2.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    border: none;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(13, 110, 253, 0.3);
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.footer {
+    background: white;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .jumbotron {
+        padding: 2rem 1rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 1rem;
+    }
+    
+    .info-section {
+        padding: 2rem 1rem;
+    }
+    
+    .contact-info {
+        margin-top: 2rem;
+    }
+} 
