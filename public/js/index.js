@@ -28,15 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(card);
     });
 
-    // Verificação de autenticação para botão de doação
-    const btnDoacao = document.querySelector('a[href="cadastro.html"]');
-    btnDoacao.addEventListener('click', (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/login.html';
-        } else {
-            window.location.href = '/cadastro.html';
-        }
-    });
+    // Verificar autenticação para área administrativa
+    const adminLink = document.querySelector('#adminLink');
+    if (adminLink) {
+        adminLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+            
+            if (token && userType === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    }
 }); 

@@ -2,7 +2,19 @@
 let modalDetalhes;
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', inicializarPagina);
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
+
+    // Verifica autenticação
+    if (!token || userType !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    inicializarPagina();
+});
+
 document.getElementById('filtroStatus').addEventListener('change', carregarDoacoes);
 document.getElementById('filtroTipo').addEventListener('change', carregarDoacoes);
 document.getElementById('ordenacao').addEventListener('change', carregarDoacoes);
@@ -33,13 +45,27 @@ function inicializarPagina() {
 // Funções de carregamento de dados
 async function carregarEstatisticas() {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
         const response = await fetch('/api/doacoes/estatisticas', {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
-        const data = await response.json();
 
+        if (response.status === 401) {
+            // Token inválido ou expirado
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const data = await response.json();
         if (response.ok) {
             atualizarEstatisticas(data);
         }
@@ -50,6 +76,12 @@ async function carregarEstatisticas() {
 
 async function carregarDoacoes() {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
         // Obter valores dos filtros
         const status = document.getElementById('filtroStatus').value;
         const tipo = document.getElementById('filtroTipo').value;
@@ -63,11 +95,19 @@ async function carregarDoacoes() {
 
         const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
-        const doacoes = await response.json();
 
+        if (response.status === 401) {
+            // Token inválido ou expirado
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const doacoes = await response.json();
         if (response.ok) {
             renderizarTabelaDoacoes(doacoes);
         }
@@ -186,6 +226,12 @@ async function alterarStatus(id, novoStatus) {
 
 async function exportarRelatorio(tipo) {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
         const modalRelatorio = bootstrap.Modal.getInstance(document.getElementById('modalRelatorio'));
         modalRelatorio.hide();
 
@@ -202,33 +248,71 @@ async function exportarRelatorio(tipo) {
 
         const response = await fetch(endpoint, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
 
-        if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `relatorio-doacoes.${tipo}`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-        } else {
-            const data = await response.json();
-            alert(data.error || `Erro ao gerar relatório ${tipo.toUpperCase()}`);
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            window.location.href = 'login.html';
+            return;
         }
+
+        if (!response.ok) {
+            throw new Error(`Erro ao gerar relatório ${tipo.toUpperCase()}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `relatorio-doacoes.${tipo === 'excel' ? 'xlsx' : tipo}`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+
+        showMessage(`Relatório ${tipo.toUpperCase()} gerado com sucesso!`, 'success');
     } catch (error) {
         console.error('Erro:', error);
-        alert('Erro ao gerar relatório');
+        showMessage(`Erro ao gerar relatório: ${error.message}`);
     } finally {
         // Restaurar botão
         const btnExportar = document.getElementById('gerarRelatorio');
         btnExportar.disabled = false;
         btnExportar.innerHTML = `<i class="bi bi-download me-2"></i>Gerar Relatório`;
     }
+}
+
+// Função para mostrar mensagens
+function showMessage(message, type = 'danger') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+    // Procura primeiro o container dentro da row dos cards de status
+    const container = document.querySelector('.row.mb-4');
+    if (container) {
+        // Insere após os cards de status
+        container.insertAdjacentElement('afterend', alertDiv);
+    } else {
+        // Fallback: insere no início da main
+        const main = document.querySelector('main');
+        if (main) {
+            main.insertAdjacentElement('afterbegin', alertDiv);
+        }
+    }
+
+    // Remove a mensagem após 5 segundos
+    setTimeout(() => {
+        if (alertDiv && alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
 }
 
 function logout() {

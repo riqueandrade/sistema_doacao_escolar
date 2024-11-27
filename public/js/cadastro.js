@@ -26,16 +26,19 @@ function validarFormulario(formData) {
     const tipo_doacao = formData.get('tipo_doacao');
     const preferencia_entrega = formData.get('preferencia_entrega');
 
-    if (!nome || nome.trim().length < 3) {
-        throw new Error('Por favor, insira um nome válido');
+    // Validação do nome
+    if (!nome || nome.trim().length < 3 || !/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/.test(nome)) {
+        throw new Error('Por favor, insira um nome válido (mínimo 3 letras, apenas caracteres alfabéticos)');
     }
 
-    if (!contato || contato.trim().length < 5) {
-        throw new Error('Por favor, insira um contato válido');
+    // Validação do telefone
+    const numeroLimpo = contato.replace(/\D/g, '');
+    if (!contato || numeroLimpo.length !== 11) {
+        throw new Error('Por favor, insira um telefone válido com DDD (11 dígitos)');
     }
 
     if (!tipo_doacao) {
-        throw new Error('Por favor, selecione o tipo de doação');
+        throw new Error('Por favor, selecione o tipo de doação na lista');
     }
 
     if (!preferencia_entrega) {
@@ -97,6 +100,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', handleSubmit);
     }
+
+    // Aplicar máscara ao campo de telefone
+    const phoneInput = document.getElementById('contato');
+    const maskOptions = {
+        mask: '(00) 00000-0000'
+    };
+    const phoneMask = IMask(phoneInput, maskOptions);
+
+    // Validação em tempo real do telefone
+    phoneInput.addEventListener('input', function() {
+        const numeroLimpo = this.value.replace(/\D/g, '');
+        
+        if (numeroLimpo.length === 11) {
+            this.classList.add('is-valid');
+            this.classList.remove('is-invalid');
+        } else {
+            this.classList.add('is-invalid');
+            this.classList.remove('is-valid');
+        }
+    });
+
+    // Adicionar validação em tempo real para o select de tipo de doação
+    const tipoSelect = document.getElementById('tipo_doacao');
+    tipoSelect.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('is-valid');
+            this.classList.remove('is-invalid');
+        } else {
+            this.classList.add('is-invalid');
+            this.classList.remove('is-valid');
+        }
+    });
 });
 
 // Função para fazer logout
@@ -106,14 +141,19 @@ function logout() {
     window.location.href = '/login.html';
 }
 
-// Validações adicionais
-document.getElementById('contato').addEventListener('input', function(e) {
+// Adicionar validação em tempo real para o campo nome
+document.getElementById('nome').addEventListener('input', function(e) {
     const valor = e.target.value;
-    if (valor.includes('@')) {
-        // Se parece um email, aplica validação de email
-        e.target.type = 'email';
+    
+    // Remove caracteres não alfabéticos (exceto espaços)
+    e.target.value = valor.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+    
+    // Feedback visual
+    if (valor.trim().length < 3) {
+        e.target.classList.add('is-invalid');
+        e.target.classList.remove('is-valid');
     } else {
-        // Se parece um telefone, permite apenas números e alguns caracteres especiais
-        e.target.value = valor.replace(/[^\d\s()-]/g, '');
+        e.target.classList.add('is-valid');
+        e.target.classList.remove('is-invalid');
     }
 }); 
