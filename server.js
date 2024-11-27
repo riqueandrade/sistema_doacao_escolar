@@ -3,6 +3,9 @@ const cors = require('cors');
 const path = require('path');
 const db = require('./database');
 const Excel = require('exceljs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { authMiddleware, adminMiddleware, JWT_SECRET } = require('./middlewares/auth');
 
 const app = express();
 const port = 3000;
@@ -16,12 +19,13 @@ app.get('/', (req, res) => {
 });
 
 // Rota para cadastrar nova doação
-app.post('/api/doacoes', (req, res) => {
+app.post('/api/doacoes', authMiddleware, (req, res) => {
     const { nome, contato, tipo_doacao, preferencia_entrega } = req.body;
+    const usuario_id = req.usuario.id;
     
-    db.run(`INSERT INTO doacoes (nome, contato, tipo_doacao, preferencia_entrega, status) 
-            VALUES (?, ?, ?, ?, 'pendente')`, 
-            [nome, contato, tipo_doacao, preferencia_entrega], 
+    db.run(`INSERT INTO doacoes (usuario_id, nome, contato, tipo_doacao, preferencia_entrega, status) 
+            VALUES (?, ?, ?, ?, ?, 'pendente')`, 
+            [usuario_id, nome, contato, tipo_doacao, preferencia_entrega], 
             function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -32,7 +36,7 @@ app.post('/api/doacoes', (req, res) => {
 });
 
 // Rota para listar todas as doações
-app.get('/api/doacoes', (req, res) => {
+app.get('/api/doacoes', authMiddleware, adminMiddleware, (req, res) => {
     const { status, tipo } = req.query;
     let sql = 'SELECT * FROM doacoes WHERE 1=1';
     const params = [];
@@ -58,7 +62,7 @@ app.get('/api/doacoes', (req, res) => {
 });
 
 // Rota para atualizar status da doação
-app.put('/api/doacoes/:id/status', (req, res) => {
+app.put('/api/doacoes/:id/status', authMiddleware, adminMiddleware, (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     
@@ -72,7 +76,7 @@ app.put('/api/doacoes/:id/status', (req, res) => {
 });
 
 // Rota para gerar relatório
-app.get('/api/relatorio', async (req, res) => {
+app.get('/api/relatorio', authMiddleware, adminMiddleware, async (req, res) => {
     try {
         const rows = await new Promise((resolve, reject) => {
             db.all('SELECT * FROM doacoes ORDER BY data_cadastro DESC', [], (err, rows) => {

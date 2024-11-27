@@ -1,6 +1,15 @@
 let modalDetalhes;
 
 document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+    if (!token || usuario.tipo !== 'admin') {
+        alert('Acesso restrito à administradores');
+        window.location.href = '/login.html';
+        return;
+    }
+
     carregarDoacoes();
     atualizarEstatisticas();
     
@@ -15,12 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function carregarDoacoes() {
+    const token = localStorage.getItem('token');
     const status = document.getElementById('filtroStatus').value;
     const tipo = document.getElementById('filtroTipo').value;
     const ordenacao = document.getElementById('ordenacao').value;
     
     try {
-        const response = await fetch(`/api/doacoes?status=${status}&tipo=${tipo}&ordem=${ordenacao}`);
+        const response = await fetch(`/api/doacoes?status=${status}&tipo=${tipo}&ordem=${ordenacao}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const doacoes = await response.json();
         
         const tbody = document.getElementById('tabelaDoacoes');

@@ -1,5 +1,21 @@
+// Verificar autenticação ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+});
+
 document.getElementById('formDoacao').addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Você precisa estar logado para fazer uma doação');
+        window.location.href = '/login.html';
+        return;
+    }
     
     const formData = {
         nome: document.getElementById('nome').value,
@@ -9,10 +25,11 @@ document.getElementById('formDoacao').addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/doacoes', {
+        const response = await fetch('/api/doacoes', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(formData)
         });
