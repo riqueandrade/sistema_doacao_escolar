@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <style>
+    .livro { fill: #0d6efd; }
+    .paginas { fill: #ffffff; }
+  </style>
+  <rect class="livro" x="4" y="4" width="24" height="24" rx="4"/>
+  <path class="paginas" d="M10 8h12v16H10V8zm2 2h8v12h-8V10z"/>
+  <path class="paginas" d="M14 12h4v2h-4v-2zm0 4h4v2h-4v-2z"/>
+</svg>

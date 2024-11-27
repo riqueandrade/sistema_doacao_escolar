@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administração - Escola Felipe dos Santos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="css/admin.css" rel="stylesheet">
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Escola Felipe dos Santos</a>
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-book-half me-2"></i>Escola Felipe dos Santos
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="cadastro.html">Fazer Doação</a>
+                        <a class="nav-link" href="cadastro.html">
+                            <i class="bi bi-heart-fill me-1"></i>Fazer Doação
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Área Administrativa</a>
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-gear-fill me-1"></i>Área Administrativa
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -25,59 +38,170 @@
     </nav>
 
     <main class="container mt-4">
+        <!-- Cards de Resumo -->
         <div class="row mb-4">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Filtros</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <select class="form-select" id="filtroStatus">
-                                    <option value="">Todos os Status</option>
-                                    <option value="pendente">Pendente</option>
-                                    <option value="recebido">Recebido</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="form-select" id="filtroTipo">
-                                    <option value="">Todos os Tipos</option>
-                                    <option value="material_escolar">Material Escolar</option>
-                                    <option value="alimentos">Alimentos</option>
-                                    <option value="livros">Livros</option>
-                                    <option value="roupas">Roupas</option>
-                                    <option value="outros">Outros</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-primary" id="gerarRelatorio">Gerar Relatório</button>
-                            </div>
-                        </div>
+            <div class="col-md-3">
+                <div class="status-card total">
+                    <div class="status-icon">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Total Doações</h3>
+                        <p id="totalDoacoes">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="status-card pendentes">
+                    <div class="status-icon">
+                        <i class="bi bi-clock-fill"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Pendentes</h3>
+                        <p id="doacoesPendentes">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="status-card recebidas">
+                    <div class="status-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Recebidas</h3>
+                        <p id="doacoesRecebidas">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="status-card coletas">
+                    <div class="status-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Coletas</h3>
+                        <p id="doacoesColeta">0</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Nome</th>
-                        <th>Contato</th>
-                        <th>Tipo</th>
-                        <th>Entrega</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaDoacoes">
-                    <!-- Preenchido via JavaScript -->
-                </tbody>
-            </table>
+        <!-- Filtros e Ações -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filtroStatus">
+                            <option value="">Todos</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="recebido">Recebido</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tipo de Doação</label>
+                        <select class="form-select" id="filtroTipo">
+                            <option value="">Todos</option>
+                            <option value="material_escolar">Material Escolar</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="livros">Livros</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ordenar por</label>
+                        <select class="form-select" id="ordenacao">
+                            <option value="data_desc">Data (mais recente)</option>
+                            <option value="data_asc">Data (mais antiga)</option>
+                            <option value="nome">Nome</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" id="gerarRelatorio">
+                            <i class="bi bi-download me-2"></i>Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Doações -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome</th>
+                                <th>Contato</th>
+                                <th>Tipo</th>
+                                <th>Entrega</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaDoacoes">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
+    <footer class="footer mt-5">
+        <div class="container text-center py-3">
+            <p>© 2024 Escola Felipe dos Santos - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/admin.js"></script>
+
+    <!-- Adicionar antes do fechamento do body -->
+    <div class="modal fade" id="modalDetalhes" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes da Doação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="detalhes-doacao">
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-calendar-event me-2"></i>Data:</label>
+                            <span id="detalheData"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-person me-2"></i>Nome:</label>
+                            <span id="detalheNome"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-telephone me-2"></i>Contato:</label>
+                            <span id="detalheContato"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-box-seam me-2"></i>Tipo de Doação:</label>
+                            <span id="detalheTipo"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-truck me-2"></i>Preferência de Entrega:</label>
+                            <span id="detalheEntrega"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold"><i class="bi bi-check-circle me-2"></i>Status:</label>
+                            <span id="detalheStatus"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-</html> 
+
+</html>

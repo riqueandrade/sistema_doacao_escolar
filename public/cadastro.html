@@ -5,22 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Doação - Escola Felipe dos Santos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="css/cadastro.css" rel="stylesheet">
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Escola Felipe dos Santos</a>
+            <a class="navbar-brand" href="index.html"><i class="bi bi-book-half me-2"></i>Escola Felipe dos Santos</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Fazer Doação</a>
+                        <a class="nav-link active" href="#"><i class="bi bi-heart-fill me-1"></i>Fazer Doação</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin.html">Área Administrativa</a>
+                        <a class="nav-link" href="admin.html"><i class="bi bi-gear-fill me-1"></i>Área Administrativa</a>
                     </li>
                 </ul>
             </div>
@@ -28,51 +30,81 @@
     </nav>
 
     <main class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h2>Cadastro de Doação</h2>
-            </div>
-            <div class="card-body">
-                <form id="formDoacao">
-                    <div class="mb-3">
-                        <label for="nome" class="form-label">Nome Completo</label>
-                        <input type="text" class="form-control" id="nome" required>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="bi bi-gift-fill me-2"></i>Cadastro de Doação</h2>
+                        <p class="text-muted mb-0">Preencha os dados abaixo para realizar sua doação</p>
                     </div>
-                    <div class="mb-3">
-                        <label for="contato" class="form-label">Contato (telefone ou email)</label>
-                        <input type="text" class="form-control" id="contato" required>
+                    <div class="card-body">
+                        <form id="formDoacao">
+                            <div class="mb-4">
+                                <label for="nome" class="form-label">
+                                    <i class="bi bi-person-fill me-1"></i>Nome Completo
+                                </label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="contato" class="form-label">
+                                    <i class="bi bi-telephone-fill me-1"></i>Contato (telefone ou email)
+                                </label>
+                                <input type="text" class="form-control" id="contato" required>
+                                <div class="form-text">Usaremos este contato para confirmar os detalhes da doação</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="tipo_doacao" class="form-label">
+                                    <i class="bi bi-box-seam-fill me-1"></i>Tipo de Doação
+                                </label>
+                                <select class="form-select" id="tipo_doacao" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="material_escolar">Material Escolar</option>
+                                    <option value="alimentos">Alimentos</option>
+                                    <option value="livros">Livros</option>
+                                    <option value="roupas">Roupas</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-truck me-1"></i>Preferência de Entrega
+                                </label>
+                                <div class="entrega-options">
+                                    <div class="form-check entrega-option">
+                                        <input class="form-check-input" type="radio" name="preferencia_entrega" 
+                                               id="entrega_escola" value="escola" required>
+                                        <label class="form-check-label" for="entrega_escola">
+                                            <i class="bi bi-building me-1"></i>Entregar na escola
+                                            <small class="d-block text-muted">Entregue sua doação diretamente em nossa escola</small>
+                                        </label>
+                                    </div>
+                                    <div class="form-check entrega-option">
+                                        <input class="form-check-input" type="radio" name="preferencia_entrega" 
+                                               id="coleta" value="coleta">
+                                        <label class="form-check-label" for="coleta">
+                                            <i class="bi bi-box-arrow-in-down me-1"></i>Solicitar coleta
+                                            <small class="d-block text-muted">Nossa equipe irá até você para retirar a doação</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-heart-fill me-2"></i>Cadastrar Doação
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="tipo_doacao" class="form-label">Tipo de Doação</label>
-                        <select class="form-select" id="tipo_doacao" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="material_escolar">Material Escolar</option>
-                            <option value="alimentos">Alimentos</option>
-                            <option value="livros">Livros</option>
-                            <option value="roupas">Roupas</option>
-                            <option value="outros">Outros</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Preferência de Entrega</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="preferencia_entrega" id="entrega_escola" value="escola" required>
-                            <label class="form-check-label" for="entrega_escola">
-                                Entregar na escola
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="preferencia_entrega" id="coleta" value="coleta">
-                            <label class="form-check-label" for="coleta">
-                                Solicitar coleta
-                            </label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Cadastrar Doação</button>
-                </form>
+                </div>
             </div>
         </div>
     </main>
+
+    <footer class="footer mt-5">
+        <div class="container text-center py-3">
+            <p>© 2024 Escola Felipe dos Santos - Todos os direitos reservados</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/cadastro.js"></script>
