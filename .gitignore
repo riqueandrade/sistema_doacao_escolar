@@ -1,26 +1,22 @@
-# Dependências
+# Dependências e Pacotes
 node_modules/
-
-# Arquivos de ambiente
-.env
-.env.local
-.env.*.local
-
-# Arquivos do sistema
-.DS_Store
-Thumbs.db
-
-# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Banco de dados SQLite
+# Banco de Dados
 *.db
 *.db-journal
 
-# Arquivos de IDE/Editor
+# Ambiente e Configuração
+.env
+.env.local
+.env.*.local
+dist/
+build/
+
+# IDEs e Editores
 .idea/
 .vscode/
 *.swp
@@ -28,6 +24,6 @@ yarn-error.log*
 *.sublime-workspace
 *.sublime-project
 
-# Arquivos de build/distribuição
-dist/
-build/
+# Sistema Operacional
+.DS_Store
+Thumbs.db

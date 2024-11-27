@@ -1,50 +1,47 @@
-// Verificar autenticação ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/login.html';
-        return;
-    }
-});
+// Função para lidar com o envio do formulário de doação
+async function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
 
-document.getElementById('formDoacao').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Você precisa estar logado para fazer uma doação');
-        window.location.href = '/login.html';
-        return;
-    }
-    
-    const formData = {
-        nome: document.getElementById('nome').value,
-        contato: document.getElementById('contato').value,
-        tipo_doacao: document.getElementById('tipo_doacao').value,
-        preferencia_entrega: document.querySelector('input[name="preferencia_entrega"]:checked').value
+    const doacao = {
+        nome: form.nome.value,
+        contato: form.contato.value,
+        tipo_doacao: form.tipo_doacao.value,
+        preferencia_entrega: form.querySelector('input[name="preferencia_entrega"]:checked').value
     };
 
     try {
         const response = await fetch('/api/doacoes', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(doacao)
         });
 
+        const data = await response.json();
+
         if (response.ok) {
-            alert('Doação cadastrada com sucesso!');
-            document.getElementById('formDoacao').reset();
+            alert('Doação cadastrada com sucesso! Entraremos em contato em breve.');
+            form.reset();
         } else {
-            throw new Error('Erro ao cadastrar doação');
+            alert(data.error || 'Erro ao cadastrar doação');
         }
     } catch (error) {
-        alert('Erro ao cadastrar doação: ' + error.message);
         console.error('Erro:', error);
+        alert('Erro ao conectar com o servidor');
     }
-});
+}
+
+// Adicionar evento de submit ao formulário
+document.getElementById('formDoacao').addEventListener('submit', handleSubmit);
+
+// Função para fazer logout
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userType');
+    window.location.href = '/login.html';
+}
 
 // Validações adicionais
 document.getElementById('contato').addEventListener('input', function(e) {

@@ -1,92 +1,76 @@
-// Mostrar formulário de login por padrão
-document.addEventListener('DOMContentLoaded', () => {
-    toggleForms('login');
-});
+// Função para mostrar mensagem de feedback
+function showMessage(message, type = 'danger') {
+    const messageDiv = document.getElementById('mensagem');
+    messageDiv.className = `alert alert-${type}`;
+    messageDiv.textContent = message;
+    messageDiv.classList.remove('d-none');
 
-function toggleForms(form) {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-
-    if (form === 'login') {
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        setTimeout(() => loginForm.classList.add('active'), 50);
-        registerForm.classList.remove('active');
-    } else {
-        registerForm.style.display = 'block';
-        loginForm.style.display = 'none';
-        setTimeout(() => registerForm.classList.add('active'), 50);
-        loginForm.classList.remove('active');
-    }
+    // Esconder mensagem após 5 segundos
+    setTimeout(() => {
+        messageDiv.classList.add('d-none');
+    }, 5000);
 }
 
+// Função para lidar com o login
 async function handleLogin(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
     
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
+    submitButton.disabled = true;
+    submitButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Entrando...`;
+
     try {
-        const response = await fetch('/api/login', {
+        const form = event.target;
+        const email = form.email.value;
+        const senha = form.senha.value;
+
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email: formData.get('email'),
-                senha: formData.get('senha')
-            })
+            body: JSON.stringify({ email, senha })
         });
 
         const data = await response.json();
-        
+
         if (response.ok) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('usuario', JSON.stringify(data.usuario));
-            
-            // Redirecionar baseado no tipo de usuário
-            if (data.usuario.tipo === 'admin') {
-                window.location.href = '/admin.html';
-            } else {
-                window.location.href = '/cadastro.html';
+            if (data.tipo !== 'admin') {
+                showMessage('Acesso permitido apenas para administradores');
+                return;
             }
+
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userType', data.tipo);
+            localStorage.setItem('userName', data.nome);
+
+            showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+
+            setTimeout(() => {
+                window.location.href = '/admin.html';
+            }, 1000);
         } else {
-            alert(data.error || 'Erro ao fazer login');
+            showMessage(data.error || 'Erro ao fazer login');
         }
     } catch (error) {
         console.error('Erro:', error);
-        alert('Erro ao fazer login');
+        showMessage('Erro ao conectar com o servidor');
+    } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
     }
 }
 
-async function handleRegister(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
+// Verificar se já está logado ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
     
-    try {
-        const response = await fetch('/api/registro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nome: formData.get('nome'),
-                email: formData.get('email'),
-                senha: formData.get('senha')
-            })
-        });
-
-        const data = await response.json();
-        
-        if (response.ok) {
-            alert('Conta criada com sucesso! Faça login para continuar.');
-            toggleForms('login');
-        } else {
-            alert(data.error || 'Erro ao criar conta');
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao criar conta');
+    if (token && userType === 'admin') {
+        window.location.href = '/admin.html';
     }
-}
+});
 
 function logout() {
     localStorage.removeItem('token');

@@ -23,13 +23,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="cadastro.html">
-                            <i class="bi bi-heart-fill me-1"></i>Fazer Doação
-                        </a>
+                        <span class="nav-link">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span id="nomeUsuario">Admin</span>
+                        </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="bi bi-gear-fill me-1"></i>Área Administrativa
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="bi bi-box-arrow-right me-1"></i>Sair
                         </a>
                     </li>
                 </ul>
@@ -194,6 +195,33 @@
                             <label class="fw-bold"><i class="bi bi-check-circle me-2"></i>Status:</label>
                             <span id="detalheStatus"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar antes do fechamento do body, junto com o outro modal -->
+    <div class="modal fade" id="modalRelatorio" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-earmark-arrow-down me-2"></i>Exportar Relatório
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-outline-success btn-lg" onclick="exportarRelatorio('excel')">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Exportar para Excel
+                        </button>
+                        <button class="btn btn-outline-danger btn-lg" onclick="exportarRelatorio('pdf')">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>Exportar para PDF
+                        </button>
                     </div>
                 </div>
                 <div class="modal-footer">

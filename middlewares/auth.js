@@ -1,28 +1,88 @@
 const jwt = require('jsonwebtoken');
+const db = require('../database');
 
-const JWT_SECRET = 'sua_chave_secreta_aqui'; // Em produção, use variáveis de ambiente
+// Chave secreta para JWT - Em produção, usar variável de ambiente
+const JWT_SECRET = 'sua_chave_secreta_jwt';
 
-function authMiddleware(req, res, next) {
-    const token = req.headers.authorization?.split(' ')[1];
+/**
+ * Funções auxiliares
+ */
 
-    if (!token) {
-        return res.status(401).json({ error: 'Token não fornecido' });
+// Função para gerar token JWT
+const generateToken = (payload) => {
+    return jwt.sign(payload, JWT_SECRET, {
+        expiresIn: '1d' // Token expira em 1 dia
+    });
+};
+
+// Função para validar formato do token
+const validarFormatoToken = (authHeader) => {
+    const parts = authHeader.split(' ');
+    if (parts.length !== 2) {
+        throw new Error('Token mal formatado');
     }
 
+    const [scheme, token] = parts;
+    if (!/^Bearer$/i.test(scheme)) {
+        throw new Error('Token mal formatado');
+    }
+
+    return token;
+};
+
+/**
+ * Middlewares
+ */
+
+// Middleware para verificar autenticação
+const authMiddleware = (req, res, next) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuario = decoded;
-        next();
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Token não fornecido' });
+        }
+
+        const token = validarFormatoToken(authHeader);
+
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'Token inválido' });
+            }
+
+            req.usuario = decoded;
+            return next();
+        });
     } catch (error) {
-        return res.status(401).json({ error: 'Token inválido' });
+        return res.status(401).json({ error: error.message || 'Erro ao autenticar token' });
     }
-}
+};
 
-function adminMiddleware(req, res, next) {
-    if (req.usuario.tipo !== 'admin') {
-        return res.status(403).json({ error: 'Acesso negado' });
+// Middleware para verificar se é admin
+const adminMiddleware = (req, res, next) => {
+    try {
+        if (!req.usuario) {
+            return res.status(401).json({ error: 'Usuário não autenticado' });
+        }
+
+        db.get('SELECT tipo FROM usuarios WHERE id = ?', [req.usuario.id], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: 'Erro ao verificar permissões' });
+            }
+
+            if (!row || row.tipo !== 'admin') {
+                return res.status(403).json({ error: 'Acesso negado' });
+            }
+
+            next();
+        });
+    } catch (error) {
+        return res.status(500).json({ error: 'Erro ao verificar permissões' });
     }
-    next();
-}
+};
 
-module.exports = { authMiddleware, adminMiddleware, JWT_SECRET }; 
+module.exports = {
+    authMiddleware,
+    adminMiddleware, 
+    generateToken,
+    JWT_SECRET
+};
